@@ -1,5 +1,4 @@
 from flask import request, jsonify
-from sqlalchemy import asc, desc
 
 from app import app
 from app import db
@@ -9,11 +8,12 @@ from model.products import Products
 @app.route('/newproduct', methods=['POST'])
 def new_product():
     data = request.get_json()
-    new_product = Products(productName=data['productName'],
-                           productPrice=data['productPrice'])
+    new_product = Products(name=data['name'],
+                           price=data['price'],
+                           qtd=data['qtd'])
     db.session.add(new_product)
     db.session.commit()
-    return jsonify({'id': new_product.id, 'productName': new_product.productName, 'productPrice': new_product.productPrice}), 201
+    return jsonify({'id': new_product.id, 'name': new_product.name, 'price': new_product.price, 'qtd': new_product.qtd}), 201
 
 
 @app.route('/products', methods=["GET"])
@@ -23,7 +23,7 @@ def list_products():
         return jsonify([]), 200
 
     
-    result = [{'id': product.id, 'productName': product.productName, 'productPrice': product.productPrice} for product in productsList]
+    result = [{'id': product.id, 'name': product.name, 'price': product.price, 'qtd': product.qtd} for product in productsList]
 
 
     return jsonify(result)
@@ -35,12 +35,13 @@ def show_update_delete_product(product_id):
         return jsonify({'message': 'produto não encontrado'}), 404
 
     if request.method=="GET":
-        return jsonify({'id': product.id, 'productName': product.productName, 'productPrice': product.productPrice}), 201
+        return jsonify({'id': product.id, 'name': product.name, 'price': product.price, 'qtd': product.qtd}), 201
 
     if request.method=="PUT":     
         data = request.get_json()
-        product.productName = data['productName']
-        product.productPrice = data['productPrice']
+        product.name = data['name']
+        product.price = data['price']
+        product.qtd = data['qtd']
         db.session.flush()
         db.session.commit()
         return jsonify({'message': 'produto alterado com sucesso'}), 201
