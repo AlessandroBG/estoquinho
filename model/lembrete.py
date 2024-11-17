@@ -12,18 +12,16 @@ class Lembretes(db.Model):
     produtoName = db.Column(db.String(120))
     valor = db.Column(db.Float, nullable=False)
     time = db.Column(db.String(80), nullable=False)
-    timer = db.Column(db.Integer)
 
 
     cliente = relationship("Clientes", back_populates="lembretes")
     produto = relationship("Products", back_populates="lembretes")
 
-    def __init__(self, *, clienteName, produtoName, valor, time, timer, clienteId=None, produtoId=None):
+    def __init__(self, *, clienteName, produtoName, valor, time, clienteId=None, produtoId=None):
         self.clienteName = clienteName
         self.produtoName = produtoName
         self.valor = valor
         self.time = time
-        self.timer = timer
         self.clienteId = clienteId
         self.produtoId = produtoId
 
