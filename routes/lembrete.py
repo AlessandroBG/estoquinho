@@ -53,4 +53,4 @@ def show_update_delete_lembrete(lembrete_id):
         db.session.delete(lembrete)
         db.session.commit()
 
-        return jsonify({"message": 'Produto deletado com sucesso!'})
+        return jsonify({"message": 'Lembrete deletado com sucesso!'})

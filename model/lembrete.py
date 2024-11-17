@@ -10,4 +10,4 @@ class Lembretes(db.Model):
 
 
     def __repr__(self):
-        return '<Products %r>' % self.productName
+        return '<Lembretes %r>' % self.cliente
