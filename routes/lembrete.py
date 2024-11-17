@@ -3,18 +3,38 @@ from flask import request, jsonify
 from app import app
 from app import db
 from model.lembrete import Lembretes
+from model.cadastroCliente import Clientes
 
 
 @app.route('/newlembrete', methods=['POST'])
 def create_lembrete():
     data = request.get_json()
-    new_lembrete = Lembretes(cliente=data['cliente'],
-                            valor=data['valor'],
-                            time=data['time'],
-                            timer=data['timer'])
+    cliente = db.session.query(Clientes).filter_by(id=data['clienteId']).first()
+
+    if not cliente:
+        return jsonify({'error': 'Cliente não encontrado'}), 404
+
+    new_lembrete = Lembretes(
+        clienteId=cliente.id,
+        clienteName=cliente.name,
+        valor=data['valor'],
+        time=data['time'],
+        timer=data['timer']
+    )
+
+    # Adiciona e confirma no banco de dados
     db.session.add(new_lembrete)
     db.session.commit()
-    return jsonify({'id': new_lembrete.id, 'cliente': new_lembrete.cliente, 'valor': new_lembrete.valor, 'time': new_lembrete.time, 'timer': new_lembrete.timer}), 201
+
+    # Retorna os dados do lembrete criado
+    return jsonify({
+        'id': new_lembrete.id,
+        'clienteId': new_lembrete.clienteId,
+        'clienteName': new_lembrete.clienteName,
+        'valor': new_lembrete.valor,
+        'time': new_lembrete.time,
+        'timer': new_lembrete.timer
+    }), 201
 
 
 @app.route('/lembretes', methods=['GET'])
@@ -24,7 +44,7 @@ def show_lembretes():
         return jsonify([]), 200
     
 
-    result = [{'id': lembrete.id, 'cliente': lembrete.cliente, 'valor': lembrete.valor, 'time': lembrete.time, 'timer': lembrete.timer} for lembrete in lembreteList]
+    result = [{'id': lembrete.id, 'clienteName': lembrete.clienteName, 'valor': lembrete.valor, 'time': lembrete.time, 'timer': lembrete.timer} for lembrete in lembreteList]
     
 
     return jsonify(result)
@@ -37,17 +57,8 @@ def show_update_delete_lembrete(lembrete_id):
         return jsonify({'message': 'Lembrete não encontrado'}), 404
     
     if request.method=="GET":
-        return jsonify({'id': lembrete.id, 'cliente': lembrete.cliente, 'valor': lembrete.valor, 'time': lembrete.time, 'timer': lembrete.timer}), 201
+        return jsonify({'id': lembrete.id, 'clienteName': lembrete.clienteName,  'valor': lembrete.valor, 'time': lembrete.time, 'timer': lembrete.timer}), 201
     
-    if request.method=="PUT":
-        data = request.get_json()
-        lembrete.cliente = data['cliente']
-        lembrete.valor = data['valor']
-        lembrete.time = data['time']
-        lembrete.timer = data['timer']
-        db.session.flush()
-        db.session.commit()
-        return jsonify({'message': 'Lembrete alterado com sucesso!'}), 201
     
     if request.method=="DELETE":
         db.session.delete(lembrete)
