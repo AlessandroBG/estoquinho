@@ -4,20 +4,28 @@ from app import app
 from app import db
 from model.lembrete import Lembretes
 from model.cadastroCliente import Clientes
+from model.products import Products
 
 
 @app.route('/newlembrete', methods=['POST'])
 def create_lembrete():
     data = request.get_json()
     cliente = db.session.query(Clientes).filter_by(id=data['clienteId']).first()
+    produto = db.session.query(Products).filter_by(id=data['produtoId']).first()
 
     if not cliente:
         return jsonify({'error': 'Cliente não encontrado'}), 404
+    
+    
+    if not produto:
+        return jsonify({'error': 'Produto não encontrado'}), 404
 
     new_lembrete = Lembretes(
         clienteId=cliente.id,
+        produtoId=produto.id,
         clienteName=cliente.name,
-        valor=data['valor'],
+        produtoName=produto.name,
+        valor=produto.price,
         time=data['time'],
         timer=data['timer']
     )
@@ -31,6 +39,7 @@ def create_lembrete():
         'id': new_lembrete.id,
         'clienteId': new_lembrete.clienteId,
         'clienteName': new_lembrete.clienteName,
+        'produtoName': new_lembrete.produtoName,
         'valor': new_lembrete.valor,
         'time': new_lembrete.time,
         'timer': new_lembrete.timer
@@ -44,7 +53,7 @@ def show_lembretes():
         return jsonify([]), 200
     
 
-    result = [{'id': lembrete.id, 'clienteName': lembrete.clienteName, 'valor': lembrete.valor, 'time': lembrete.time, 'timer': lembrete.timer} for lembrete in lembreteList]
+    result = [{'id': lembrete.id, 'clienteName': lembrete.clienteName, 'produtoName': lembrete.produtoName, 'valor': lembrete.valor, 'time': lembrete.time, 'timer': lembrete.timer} for lembrete in lembreteList]
     
 
     return jsonify(result)
@@ -57,7 +66,7 @@ def show_update_delete_lembrete(lembrete_id):
         return jsonify({'message': 'Lembrete não encontrado'}), 404
     
     if request.method=="GET":
-        return jsonify({'id': lembrete.id, 'clienteName': lembrete.clienteName,  'valor': lembrete.valor, 'time': lembrete.time, 'timer': lembrete.timer}), 201
+        return jsonify({'id': lembrete.id, 'clienteName': lembrete.clienteName, 'produtoName': lembrete.produtoName, 'valor': lembrete.valor, 'time': lembrete.time, 'timer': lembrete.timer}), 201
     
     
     if request.method=="DELETE":

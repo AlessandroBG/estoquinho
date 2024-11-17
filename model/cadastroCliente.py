@@ -1,11 +1,8 @@
 from app import db
-from sqlalchemy import Column, ForeignKey, Integer, Table
-from sqlalchemy.orm import declarative_base, relationship
-
-Base = declarative_base()
+from sqlalchemy.orm import relationship
 
 
-class Clientes(db.Model, Base):
+class Clientes(db.Model):
     __tablename__ = "Clientes"
     
     id = db.Column(db.Integer, primary_key=True)
