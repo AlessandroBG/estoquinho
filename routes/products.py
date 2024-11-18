@@ -6,7 +6,7 @@ from app import db
 from model.products import Products
 
 
-@app.route('/newproduct', methods=['POST'])
+@app.route('/novoproduto', methods=['POST'])
 def new_product():
     aut = authentication()
     if aut is not None:
@@ -21,7 +21,7 @@ def new_product():
     return jsonify({'id': new_product.id, 'name': new_product.name, 'price': new_product.price, 'qtd': new_product.qtd}), 201
 
 
-@app.route('/products', methods=["GET"])
+@app.route('/produtos', methods=["GET"])
 def list_products():    
     aut = authentication()
     if aut is not None:
@@ -37,7 +37,7 @@ def list_products():
 
     return jsonify(result)
 
-@app.route('/products:<int:product_id>', methods=["GET", "PUT", "DELETE"])
+@app.route('/produtos/<int:product_id>', methods=["GET", "PUT", "DELETE"])
 def show_update_delete_product(product_id):
     aut = authentication()
     if aut is not None:

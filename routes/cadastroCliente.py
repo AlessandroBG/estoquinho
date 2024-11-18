@@ -6,7 +6,7 @@ from app import db
 from model.cadastroCliente import Clientes
 
 
-@app.route('/newcliente', methods=['POST'])
+@app.route('/novocliente', methods=['POST'])
 def new_client():
     aut = authentication()
     if aut is not None:

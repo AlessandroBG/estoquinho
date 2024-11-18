@@ -10,7 +10,7 @@ from model.cadastroCliente import Clientes
 from model.products import Products
 
 
-@app.route('/newlembrete', methods=['POST'])
+@app.route('/novolembrete', methods=['POST'])
 def create_lembrete():
     aut = authentication()
     if aut is not None:
