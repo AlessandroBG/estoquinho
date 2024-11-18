@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from flask import request, jsonify
+from jwt import authentication
 
 from app import app
 from app import db
@@ -11,6 +12,10 @@ from model.products import Products
 
 @app.route('/newlembrete', methods=['POST'])
 def create_lembrete():
+    aut = authentication()
+    if aut is not None:
+        return aut
+    
     data = request.get_json()
     cliente = db.session.query(Clientes).filter_by(id=data['clienteId']).first()
     produto = db.session.query(Products).filter_by(id=data['produtoId']).first()
@@ -50,6 +55,10 @@ def create_lembrete():
 
 @app.route('/lembretes', methods=['GET'])
 def show_lembretes():
+    aut = authentication()
+    if aut is not None:
+        return aut
+    
     lembreteList = Lembretes.query.all()
     if not lembreteList:
         return jsonify([]), 200
@@ -63,6 +72,10 @@ def show_lembretes():
 
 @app.route('/lembretes/<int:lembrete_id>', methods=["GET", "PUT", "DELETE"])
 def show_update_delete_lembrete(lembrete_id):
+    aut = authentication()
+    if aut is not None:
+        return aut
+    
     lembrete = Lembretes.query.get(lembrete_id)
     if not lembrete:
         return jsonify({'message': 'Lembrete não encontrado'}), 404

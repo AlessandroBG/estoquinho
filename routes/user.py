@@ -1,7 +1,7 @@
 import datetime
 from flask import request, jsonify
 from sqlalchemy import asc, desc
-from jwt import generate_jwt, verify_jwt
+from jwt import generate_jwt, verify_jwt, authentication
 
 from app import app
 from app import db
@@ -10,14 +10,9 @@ from model.user import User
 
 @app.route("/users", methods=["GET"])
 def list_users():
-    authorization = request.headers.get('Authorization')
-    token = authorization.split(' ')[1]
-    print(authorization)
-    if not token:
-        return jsonify({'message': "Token is missing"}), 401
-    payload = verify_jwt(token)
-    if not payload:
-        return jsonify({'message': "Tokne is invalid"}), 401
+    aut = authentication()
+    if aut is not None:
+        return aut
     
     users = User.query.all()
     if not users: 
@@ -53,13 +48,10 @@ def list_users():
 
 @app.route('/users/<int:user_id>', methods=['GET', 'DELETE'])
 def get_user(user_id):
-    authorization = request.headers.get('Authorization')
-    token = authorization.split(' ')[1]
-    if not token:
-        return jsonify({'message': "Token is missing"}), 401
-    payload = verify_jwt(token)
-    if not payload:
-        return jsonify({'message': "Token is invalid"}), 401
+    aut = authentication()
+    if aut is not None:
+        return aut
+
     user = User.query.get(user_id)
     if not user:
         return jsonify({'message': 'User not found'}), 404
@@ -100,5 +92,3 @@ def login():
         user_json = {'id': user.id, 'username': user.username, 'email': user.email}
         return jsonify({"token": token, "user": user_json}), 201
     return jsonify({"message": "Invalid username or password"}), 422
-
-

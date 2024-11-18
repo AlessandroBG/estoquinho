@@ -1,4 +1,5 @@
 from flask import request, jsonify
+from jwt import authentication
 
 from app import app
 from app import db
@@ -7,6 +8,10 @@ from model.products import Products
 
 @app.route('/newproduct', methods=['POST'])
 def new_product():
+    aut = authentication()
+    if aut is not None:
+        return aut
+    
     data = request.get_json()
     new_product = Products(name=data['name'],
                            price=data['price'],
@@ -18,6 +23,10 @@ def new_product():
 
 @app.route('/products', methods=["GET"])
 def list_products():    
+    aut = authentication()
+    if aut is not None:
+        return aut
+
     productsList = Products.query.all()
     if not productsList:
         return jsonify([]), 200
@@ -30,6 +39,10 @@ def list_products():
 
 @app.route('/products:<int:product_id>', methods=["GET", "PUT", "DELETE"])
 def show_update_delete_product(product_id):
+    aut = authentication()
+    if aut is not None:
+        return aut
+        
     product = Products.query.get(product_id)
     if not product:
         return jsonify({'message': 'produto não encontrado'}), 404
