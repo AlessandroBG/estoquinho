@@ -45,7 +45,6 @@ def create_lembrete():
     # Retorna os dados do lembrete criado
     return jsonify({
         'id': new_lembrete.id,
-        'clienteId': new_lembrete.clienteId,
         'clienteName': new_lembrete.clienteName,
         'produtoName': new_lembrete.produtoName,
         'valor': new_lembrete.valor,
