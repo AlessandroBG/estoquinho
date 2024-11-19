@@ -57,7 +57,7 @@ def show_update_delete_product(product_id):
         product.qtd = data['qtd']
         db.session.flush()
         db.session.commit()
-        return jsonify({'message': 'produto alterado com sucesso'}), 201
+        return jsonify({'message': 'produto alterado com sucesso'}), 200
 
 
     if request.method=="DELETE":

@@ -80,7 +80,7 @@ def show_update_delete_lembrete(lembrete_id):
         return jsonify({'message': 'Lembrete não encontrado'}), 404
     
     if request.method=="GET":
-        return jsonify({'id': lembrete.id, 'clienteName': lembrete.clienteName, 'produtoName': lembrete.produtoName, 'valor': lembrete.valor, 'time': lembrete.time}), 201
+        return jsonify({'id': lembrete.id, 'clienteName': lembrete.clienteName, 'produtoName': lembrete.produtoName, 'valor': lembrete.valor, 'time': lembrete.time}), 200
     
     
     if request.method=="DELETE":

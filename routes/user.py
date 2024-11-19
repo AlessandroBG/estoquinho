@@ -90,5 +90,5 @@ def login():
         }
         token = generate_jwt(payload)
         user_json = {'id': user.id, 'username': user.username, 'email': user.email}
-        return jsonify({"token": token, "user": user_json}), 201
+        return jsonify({"token": token, "user": user_json}), 200
     return jsonify({"message": "Invalid username or password"}), 422

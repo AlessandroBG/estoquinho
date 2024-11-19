@@ -49,7 +49,7 @@ def show_update_delete_cliente(cliente_id):
         return jsonify({'message': 'Cliente não encontrado'}), 404
     
     if request.method=="GET":
-        return jsonify({'id': cliente.id, 'name': cliente.name, 'cpf': cliente.cpf, 'endereco': cliente.endereco, 'telefone': cliente.telefone}), 201
+        return jsonify({'id': cliente.id, 'name': cliente.name, 'cpf': cliente.cpf, 'endereco': cliente.endereco, 'telefone': cliente.telefone}), 200
     
 
     if request.method=="PUT":
@@ -60,11 +60,11 @@ def show_update_delete_cliente(cliente_id):
         cliente.telefone = data['telefone']
         db.session.flush()
         db.session.commit()
-        return jsonify({'message': 'Cadastro alterado com sucesso!'}), 201
+        return jsonify({'message': 'Cadastro alterado com sucesso!'}), 200
 
 
     if request.method=="DELETE":
         db.session.delete(cliente)
         db.session.commit()
 
-        return jsonify({"message": 'Cadastro deletado com sucesso!'})
+        return jsonify({"message": 'Cadastro deletado com sucesso!'}), 200
